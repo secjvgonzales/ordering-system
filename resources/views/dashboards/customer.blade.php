@@ -18,7 +18,8 @@
 
         <div class="col-md-4">
 
-            <div class="card shadow-sm">
+            <a href="{{ route('customer.shop') }}"
+                class="card dashboard-link-card shadow-sm h-100 text-decoration-none text-body">
 
                 <div class="card-body">
 
@@ -28,18 +29,19 @@
                     </h5>
 
                     <p class="text-muted">
-                        Browse available items.
+                        Browse the latest THREADLINE apparel.
                     </p>
 
                 </div>
 
-            </div>
+            </a>
 
         </div>
 
         <div class="col-md-4">
 
-            <div class="card shadow-sm">
+            <a href="{{ route('customer.cart.index') }}"
+                class="card dashboard-link-card shadow-sm h-100 text-decoration-none text-body">
 
                 <div class="card-body">
 
@@ -54,13 +56,14 @@
 
                 </div>
 
-            </div>
+            </a>
 
         </div>
 
         <div class="col-md-4">
 
-            <div class="card shadow-sm">
+            <a href="{{ route('customer.orders.index') }}"
+                class="card dashboard-link-card shadow-sm h-100 text-decoration-none text-body">
 
                 <div class="card-body">
 
@@ -75,7 +78,7 @@
 
                 </div>
 
-            </div>
+            </a>
 
         </div>
 

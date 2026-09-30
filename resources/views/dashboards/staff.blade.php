@@ -18,7 +18,8 @@
 
         <div class="col-md-6">
 
-            <div class="card shadow-sm">
+            <a href="{{ route('staff.orders.index') }}"
+                class="card dashboard-link-card shadow-sm h-100 text-decoration-none text-body">
 
                 <div class="card-body">
 
@@ -33,7 +34,7 @@
 
                 </div>
 
-            </div>
+            </a>
 
         </div>
 
@@ -45,7 +46,7 @@
 
                     <h5>
                         <i class="bi bi-box-seam"></i>
-                        Available Items
+                        Available Products
                     </h5>
 
                     <p class="text-muted">

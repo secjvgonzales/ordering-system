@@ -1,74 +1,22 @@
 @extends('layouts.main')
 
-@section('title', 'Customer Shop')
+@section('title', 'Shop | THREADLINE')
 
 @section('content')
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-3 py-4 mb-4 border-bottom">
         <div>
-            <h2>Shop</h2>
-
-            <p class="text-muted mb-0">
-                Browse available items and add them to your cart.
-            </p>
+            <span class="text-uppercase small fw-semibold text-muted" style="letter-spacing: .16em;">THREADLINE / Essentials</span>
+            <h1 class="display-5 fw-bold mt-2 mb-1">Shop the collection</h1>
+            <p class="text-muted mb-0">Clean silhouettes made for everyday rotation.</p>
         </div>
-
+        <span id="product-count" class="small text-muted">{{ $items->count() }} {{ $items->count() === 1 ? 'product' : 'products' }}</span>
     </div>
 
-    <div class="row g-4">
+    @include('shop.partials.filters')
 
-        @forelse ($items as $item)
-            <div class="col-md-4">
-
-                <div class="card h-100 shadow-sm">
-
-                    <div class="card-body text-center">
-
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
-                            style="width: 100px; height: 100px; font-size: 36px;">
-                            {{ strtoupper(substr($item->name, 0, 1)) }}
-                        </div>
-
-                        <h5 class="card-title">
-                            {{ $item->name }}
-                        </h5>
-
-                        <p class="text-muted">
-                            {{ $item->description ?: 'No description available.' }}
-                        </p>
-
-                        <h5 class="text-success">
-                            ₱{{ number_format($item->price, 2) }}
-                        </h5>
-
-                        <p>
-                            Stock:
-                            <strong>{{ $item->stock_quantity }}</strong>
-                        </p>
-
-                        <button type="button" class="btn btn-primary" disabled>
-                            <i class="bi bi-cart-plus"></i>
-                            Add to Cart
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        @empty
-
-            <div class="col-12">
-
-                <div class="alert alert-info">
-                    No items are currently available.
-                </div>
-
-            </div>
-        @endforelse
-
+    <div id="product-grid" class="row g-4">
+        @include('shop.partials.product-grid')
     </div>
-
 @endsection
+
+@include('shop.partials.live-search')

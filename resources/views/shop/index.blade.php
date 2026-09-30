@@ -1,64 +1,30 @@
 @extends('layouts.main')
 
-@section('title', 'Shop')
+@section('title', 'Shop | THREADLINE')
 
 @section('content')
+    <section class="py-4 py-lg-5 mb-4 border-bottom">
+        <div class="row align-items-end g-3">
+            <div class="col-lg-8">
+                <span class="text-uppercase small fw-semibold text-muted" style="letter-spacing: .16em;">THREADLINE / Essentials</span>
+                <h1 class="display-3 fw-bold mt-2 mb-2">Everyday form.<br>Street-ready comfort.</h1>
+            </div>
+            <div class="col-lg-4">
+                <p class="text-muted mb-0">Minimal tees designed for repeat wear, relaxed proportions, and effortless daily styling.</p>
+            </div>
+        </div>
+    </section>
 
-    <div class="mb-4">
-        <h2>Shop</h2>
-        <p class="text-muted">
-            Browse available items.
-        </p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h5 text-uppercase mb-0" style="letter-spacing: .12em;">Latest products</h2>
+        <span id="product-count" class="small text-muted">{{ $items->count() }} {{ $items->count() === 1 ? 'product' : 'products' }}</span>
     </div>
 
-    <div class="row g-4">
+    @include('shop.partials.filters')
 
-        @forelse ($items as $item)
-            <div class="col-md-4">
-
-                <div class="card h-100 shadow-sm">
-
-                    <div class="card-body text-center">
-
-                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
-                            style="width: 100px; height: 100px; font-size: 36px;">
-                            {{ strtoupper(substr($item->name, 0, 1)) }}
-                        </div>
-
-                        <h5 class="card-title">
-                            {{ $item->name }}
-                        </h5>
-
-                        <p class="text-muted">
-                            {{ $item->description ?: 'No description available.' }}
-                        </p>
-
-                        <h5 class="text-success">
-                            ₱{{ number_format($item->price, 2) }}
-                        </h5>
-
-                        <p class="mb-0">
-                            Stock:
-                            <strong>{{ $item->stock_quantity }}</strong>
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        @empty
-
-            <div class="col-12">
-
-                <div class="alert alert-info">
-                    No items are currently available.
-                </div>
-
-            </div>
-        @endforelse
-
+    <div id="product-grid" class="row g-4">
+        @include('shop.partials.product-grid')
     </div>
-
 @endsection
+
+@include('shop.partials.live-search')

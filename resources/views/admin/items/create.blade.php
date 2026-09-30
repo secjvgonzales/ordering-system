@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
-@section('title', 'Add Item')
+@section('title', 'Add Product')
 
 @section('content')
 
     <div class="card shadow-sm">
 
         <div class="card-header">
-            <h3>Add Item</h3>
+            <h3>Add Product</h3>
         </div>
 
         <div class="card-body">
@@ -28,7 +28,7 @@
 
             @endif
 
-            <form action="{{ route('admin.items.store') }}" method="POST">
+            <form action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
@@ -47,6 +47,29 @@
                         </div>
                     @enderror
 
+                </div>
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" name="category" class="form-select @error('category') is-invalid @enderror">
+                        <option value="">Select a category</option>
+                        @foreach (\App\Models\Item::CATEGORIES as $category)
+                            <option value="{{ $category }}" @selected(old('category') === $category)>{{ $category }}</option>
+                        @endforeach
+                    </select>
+                    @error('category')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Product Image</label>
+                    <input id="image" type="file" name="image" accept=".jpg,.jpeg,.png,.webp"
+                        class="form-control @error('image') is-invalid @enderror">
+                    <div class="form-text">JPG, PNG, or WebP. Maximum 2 MB.</div>
+                    @error('image')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -126,7 +149,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    Save Item
+                    Save Product
                 </button>
 
                 <a href="{{ route('admin.items.index') }}" class="btn btn-secondary">

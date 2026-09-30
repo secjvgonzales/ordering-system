@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
-@section('title', 'Edit Item')
+@section('title', 'Edit Product')
 
 @section('content')
 
     <div class="card shadow-sm">
 
         <div class="card-header">
-            <h3>Edit Item</h3>
+            <h3>Edit Product</h3>
         </div>
 
         <div class="card-body">
@@ -28,7 +28,7 @@
 
             @endif
 
-            <form action="{{ route('admin.items.update', $item) }}" method="POST">
+            <form action="{{ route('admin.items.update', $item) }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -48,6 +48,38 @@
                         </div>
                     @enderror
 
+                </div>
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" name="category" class="form-select @error('category') is-invalid @enderror">
+                        <option value="">Select a category</option>
+                        @foreach (\App\Models\Item::CATEGORIES as $category)
+                            <option value="{{ $category }}" @selected(old('category', $item->category) === $category)>{{ $category }}</option>
+                        @endforeach
+                    </select>
+                    @error('category')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Product Image</label>
+                    @if ($item->image_path && file_exists(public_path($item->image_path)))
+                        <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}"
+                            class="d-block rounded object-fit-cover mb-3" width="180" height="180">
+                    @else
+                        <div class="d-flex align-items-center justify-content-center bg-light rounded mb-3"
+                            style="width: 180px; height: 180px;">
+                            <i class="bi bi-image fs-1 text-muted"></i>
+                        </div>
+                    @endif
+                    <input id="image" type="file" name="image" accept=".jpg,.jpeg,.png,.webp"
+                        class="form-control @error('image') is-invalid @enderror">
+                    <div class="form-text">Leave empty to keep the current image. Maximum 2 MB.</div>
+                    @error('image')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -116,7 +148,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-warning">
-                    Update Item
+                    Update Product
                 </button>
 
                 <a href="{{ route('admin.items.index') }}" class="btn btn-secondary">

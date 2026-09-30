@@ -1,22 +1,53 @@
 @extends('layouts.main')
 
-@section('title', 'Manage Items')
+@section('title', 'Manage Products')
 
 @section('content')
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2>Manage Items</h2>
+            <h2>Manage Products</h2>
             <p class="text-muted mb-0">
-                Manage item prices, stock, and availability.
+                Manage product prices, stock, images, and availability.
             </p>
         </div>
 
         <a href="{{ route('admin.items.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i>
-            Add Item
+            Add Product
         </a>
     </div>
+
+    <form method="GET" class="card card-body shadow-sm mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="search" class="form-label">Search</label>
+                <input id="search" name="search" value="{{ request('search') }}" class="form-control"
+                    placeholder="Name or description">
+            </div>
+            <div class="col-md-3">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" name="category" class="form-select">
+                    <option value="">All categories</option>
+                    @foreach (\App\Models\Item::CATEGORIES as $category)
+                        <option value="{{ $category }}" @selected(request('category') === $category)>{{ $category }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    <option value="active" @selected(request('status') === 'active')>Active</option>
+                    <option value="inactive" @selected(request('status') === 'inactive')>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-primary flex-grow-1">Filter</button>
+                <a href="{{ route('admin.items.index') }}" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -27,8 +58,9 @@
 
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
+                            <th>Image</th>
                             <th>Name</th>
+                            <th>Category</th>
                             <th>Price</th>
                             <th>Stock</th>
                             <th>Status</th>
@@ -41,9 +73,21 @@
                         @foreach ($items as $item)
                             <tr>
 
-                                <td>{{ $item->id }}</td>
+                                <td>
+                                    @if ($item->image_path && file_exists(public_path($item->image_path)))
+                                        <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}"
+                                            class="rounded object-fit-cover" width="54" height="54">
+                                    @else
+                                        <div class="rounded bg-light d-flex align-items-center justify-content-center"
+                                            style="width: 54px; height: 54px;">
+                                            <i class="bi bi-image text-muted"></i>
+                                        </div>
+                                    @endif
+                                </td>
 
                                 <td>{{ $item->name }}</td>
+
+                                <td>{{ $item->category ?? 'Uncategorized' }}</td>
 
                                 <td>
                                     ₱{{ number_format($item->price, 2) }}
@@ -102,6 +146,12 @@
                             </tr>
                         @endforeach
 
+                        @if ($items->isEmpty())
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">No products match these filters.</td>
+                            </tr>
+                        @endif
+
                     </tbody>
 
                 </table>
@@ -118,7 +168,7 @@
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'This item will be permanently deleted.',
+                text: 'This product will be permanently deleted.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc3545',

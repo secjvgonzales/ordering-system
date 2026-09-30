@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/maya',
+        ]);
+
         $middleware->alias([
             'active' => ActiveUserMiddleware::class,
             'admin' => AdminMiddleware::class,

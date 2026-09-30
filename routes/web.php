@@ -1,17 +1,16 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemoPaymentController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MayaPaymentController;
+use App\Http\Controllers\MayaWebhookController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderManagementController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
-
-
-Route::get('/shop', [ShopController::class, 'index'])
-    ->name('shop.index');
-
-Route::get('/shop', [ShopController::class, 'customerShop'])
-    ->name('shop');
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -21,8 +20,23 @@ Route::get('/shop', [ShopController::class, 'customerShop'])
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('shop.index');
 });
+
+Route::get('/shop', [ShopController::class, 'index'])
+    ->name('shop.index');
+
+Route::get('/shop/search', [ShopController::class, 'search'])
+    ->name('shop.search');
+
+Route::get('/products/{item}', [ShopController::class, 'show'])
+    ->name('products.show');
+
+Route::post('/products/{item}/cart', [CartController::class, 'guestStore'])
+    ->name('products.cart.guest');
+
+Route::post('/webhooks/maya', MayaWebhookController::class)
+    ->name('webhooks.maya');
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +91,21 @@ Route::middleware(['auth', 'active', 'admin'])
 
         Route::patch('/items/{item}/status', [ItemController::class, 'toggleStatus'])
             ->name('items.status');
+
+        Route::get('/orders', [OrderManagementController::class, 'index'])
+            ->name('orders.index');
+
+        Route::get('/orders/{order}', [OrderManagementController::class, 'show'])
+            ->name('orders.show');
+
+        Route::patch('/orders/{order}/status', [OrderManagementController::class, 'updateStatus'])
+            ->name('orders.status');
+
+        Route::patch('/orders/{order}/cancel', [OrderManagementController::class, 'cancel'])
+            ->name('orders.cancel');
+
+        Route::patch('/orders/{order}/payment', [OrderManagementController::class, 'markPaymentPaid'])
+            ->name('orders.payment');
     });
 
 /*
@@ -92,6 +121,21 @@ Route::middleware(['auth', 'active', 'staff'])
 
         Route::get('/dashboard', [DashboardController::class, 'staff'])
             ->name('dashboard');
+
+        Route::get('/orders', [OrderManagementController::class, 'index'])
+            ->name('orders.index');
+
+        Route::get('/orders/{order}', [OrderManagementController::class, 'show'])
+            ->name('orders.show');
+
+        Route::patch('/orders/{order}/status', [OrderManagementController::class, 'updateStatus'])
+            ->name('orders.status');
+
+        Route::patch('/orders/{order}/cancel', [OrderManagementController::class, 'cancel'])
+            ->name('orders.cancel');
+
+        Route::patch('/orders/{order}/payment', [OrderManagementController::class, 'markPaymentPaid'])
+            ->name('orders.payment');
     });
 
 /*
@@ -107,6 +151,54 @@ Route::middleware(['auth', 'active', 'customer'])
 
         Route::get('/dashboard', [DashboardController::class, 'customer'])
             ->name('dashboard');
+
+        Route::get('/shop', [ShopController::class, 'customerShop'])
+            ->name('shop');
+
+        Route::get('/cart', [CartController::class, 'index'])
+            ->name('cart.index');
+
+        Route::post('/cart/{item}', [CartController::class, 'store'])
+            ->name('cart.store');
+
+        Route::patch('/cart/{item}', [CartController::class, 'update'])
+            ->name('cart.update');
+
+        Route::delete('/cart/{item}', [CartController::class, 'destroy'])
+            ->name('cart.destroy');
+
+        Route::delete('/cart', [CartController::class, 'clear'])
+            ->name('cart.clear');
+
+        Route::get('/checkout', [OrderController::class, 'checkout'])
+            ->name('checkout.index');
+
+        Route::post('/checkout', [OrderController::class, 'store'])
+            ->name('checkout.store');
+
+        Route::get('/payment/demo/{order}', [DemoPaymentController::class, 'show'])
+            ->name('demo-payment.show');
+
+        Route::post('/payment/demo/{order}', [DemoPaymentController::class, 'process'])
+            ->name('demo-payment.process');
+
+        Route::get('/payment/maya/success', [MayaPaymentController::class, 'success'])
+            ->name('maya.success');
+
+        Route::get('/payment/maya/failure', [MayaPaymentController::class, 'failure'])
+            ->name('maya.failure');
+
+        Route::get('/payment/maya/cancel', [MayaPaymentController::class, 'cancel'])
+            ->name('maya.cancel');
+
+        Route::get('/orders', [OrderController::class, 'index'])
+            ->name('orders.index');
+
+        Route::get('/orders/{order}/receipt', [OrderController::class, 'receipt'])
+            ->name('orders.receipt');
+
+        Route::get('/orders/{order}', [OrderController::class, 'show'])
+            ->name('orders.show');
     });
 
 /*

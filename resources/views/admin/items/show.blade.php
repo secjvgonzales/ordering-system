@@ -1,16 +1,28 @@
 @extends('layouts.main')
 
-@section('title', 'View Item')
+@section('title', 'View Product')
 
 @section('content')
 
     <div class="card shadow-sm">
 
         <div class="card-header">
-            <h3>Item Details</h3>
+            <h3>Product Details</h3>
         </div>
 
         <div class="card-body">
+
+            <div class="mb-4">
+                @if ($item->image_path && file_exists(public_path($item->image_path)))
+                    <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}"
+                        class="rounded object-fit-cover" style="width: 220px; height: 165px;">
+                @else
+                    <div class="rounded bg-light d-flex align-items-center justify-content-center"
+                        style="width: 220px; height: 165px;">
+                        <i class="bi bi-image display-5 text-muted"></i>
+                    </div>
+                @endif
+            </div>
 
             <div class="mb-3">
                 <strong>ID</strong>
@@ -20,6 +32,11 @@
             <div class="mb-3">
                 <strong>Name</strong>
                 <p>{{ $item->name }}</p>
+            </div>
+
+            <div class="mb-3">
+                <strong>Category</strong>
+                <p>{{ $item->category ?? 'Uncategorized' }}</p>
             </div>
 
             <div class="mb-3">
